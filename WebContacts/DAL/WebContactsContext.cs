@@ -14,7 +14,7 @@ namespace WebContacts.DAL
         }
 
         public DbSet<ContactModel> Contacts { get; set; }
-        public DbSet<LoginViewModel> Logins { get; set; }
+        public DbSet<RegistrationModel> Logins { get; set; }
 
         //check why we need this
         //for naming of tables (Contact instead of Contacts)

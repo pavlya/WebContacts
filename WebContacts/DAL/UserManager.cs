@@ -16,22 +16,32 @@ namespace WebContacts.DAL
             this.db = db;
         }
 
-        public bool IsLoginNameExist(LoginViewModel loginModel)
+        public bool IsLoginNameExist(LoginModel loginModel)
+        {
+            string userName = loginModel.Username;
+            // Check if username exists in database
+            return db.Logins.Any(x => x.UserName.ToLower().Equals(userName));
+        }
+
+
+        // Check Using RegistrationModel
+        public bool IsLoginNameExist(RegistrationModel loginModel)
         {
             string userName = loginModel.UserName;
             // Check if username exists in database
             return db.Logins.Any(x => x.UserName.ToLower().Equals(userName));
         }
 
-        public void createNewUser([Bind(Include = "Id,UserName,Password")] LoginViewModel model)
+
+        public void createNewUser([Bind(Include = "Id,UserName,Password")] RegistrationModel model)
         {
             db.Logins.Add(model);
             db.SaveChanges();
         }
 
-        public bool isLoginCorrect(LoginViewModel loginModel)
+        public bool isLoginCorrect(LoginModel loginModel)
         {
-            string userName = loginModel.UserName;
+            string userName = loginModel.Username;
             //get password from database
             var loginModeliNDB = db.Logins.Where(x => x.UserName.ToLower().Equals(userName.ToLower()));
             string password = loginModel.Password;
@@ -39,9 +49,9 @@ namespace WebContacts.DAL
             return loginModel.Password.Equals(loginModel.Password);
         }
 
-        public string GetUserPassword(LoginViewModel loginModel)
+        public string GetUserPassword(LoginModel loginModel)
         {
-            string userName = loginModel.UserName;
+            string userName = loginModel.Username;
             var user = db.Logins.Where(o => o.UserName.ToLower().Equals(userName));
                 if (user.Any())
                     return user.FirstOrDefault().Password;

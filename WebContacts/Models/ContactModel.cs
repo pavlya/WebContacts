@@ -14,6 +14,7 @@ namespace WebContacts.Models
         [Required(ErrorMessage = "*")]
         public string Position { get; set; }
         [Required(ErrorMessage = "*")]
+        [RegularExpression(@"^[a-zA-Z0-9.-]{1,20}@[a-zA-Z0-9]{1,20}\.[A-Za-z]{2,4}", ErrorMessage = "Wrong email format")]
         public string Email { get; set; }
         [Required(ErrorMessage = "*")]
         public string PhoneNumber { get; set; }

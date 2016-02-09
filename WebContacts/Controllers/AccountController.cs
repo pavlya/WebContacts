@@ -16,7 +16,7 @@ namespace WebContacts.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(LoginViewModel model)
+        public ActionResult Index(LoginModel model)
         {
             if (ModelState.IsValid)
             {
@@ -28,7 +28,7 @@ namespace WebContacts.Controllers
                 }
                 else if (model.Password.Equals(password))
                 {
-                    FormsAuthentication.SetAuthCookie(model.UserName, false);
+                    FormsAuthentication.SetAuthCookie(model.Username, false);
                     return RedirectToAction("Index", "Home");
                 } else
                 {
@@ -47,7 +47,7 @@ namespace WebContacts.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(LoginViewModel model)
+        public ActionResult Register(RegistrationModel model)
         {
             if (ModelState.IsValid)
             {
