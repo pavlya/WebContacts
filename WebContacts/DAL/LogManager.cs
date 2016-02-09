@@ -62,5 +62,20 @@ namespace WebContacts.DAL
             db.Logs.Add(logModel);
             db.SaveChanges();
         }
+
+        public void LogFileUploadEvent(string fileName)
+        {
+            DateTime now = DateTime.Now;
+            LogModel logModel = new LogModel();
+            string combinedMessage = "Uploaded picture "+ fileName;
+
+            logModel.date = now;
+            logModel.description = combinedMessage;
+            logModel.Username = "";
+            logModel.logEvent = "Picture uploaded";
+
+            db.Logs.Add(logModel);
+            db.SaveChanges();
+        }
     }
 }

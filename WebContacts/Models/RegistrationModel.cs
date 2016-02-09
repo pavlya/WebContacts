@@ -9,13 +9,13 @@ namespace WebContacts.Models
 
         [Required(ErrorMessage = "*")]
         [Display(Name = "User name")]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 5)]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 5)]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "*")]
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]

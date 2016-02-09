@@ -1,6 +1,8 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using WebContacts.DAL;
 using WebContacts.Models;
@@ -23,7 +25,9 @@ namespace WebContacts.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ContactModel contactModel = db.Contacts.Find(id);
+            //ContactModel contactModel = db.Contacts.Find(id);
+            // specify the related files for Contacs model
+            ContactModel contactModel = db.Contacts.Include(s => s.Files).SingleOrDefault(s => s.Id == id);
             if (contactModel == null)
             {
                 return HttpNotFound();
@@ -39,10 +43,27 @@ namespace WebContacts.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,Position,Email,PhoneNumber")] ContactModel contactModel)
+        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,Position,Email,PhoneNumber")] ContactModel contactModel,
+            HttpPostedFileBase upload)
         {
+            LogManager logManager = new LogManager(db);
             if (ModelState.IsValid)
             {
+                // check if image was uploaded
+                if(upload != null && upload.ContentLength > 0 ){
+                    logManager.LogFileUploadEvent(upload.FileName);
+                    var avatar = new File
+                    {
+                        FileName = System.IO.Path.GetFileName(upload.FileName),
+                        FileType = FileType.Avatar,
+                        ContentType = upload.ContentType
+                    };
+                    using (var reader = new System.IO.BinaryReader(upload.InputStream))
+                    {
+                        avatar.Content = reader.ReadBytes(upload.ContentLength);
+                    }
+                    contactModel.Files = new List<File> { avatar };
+                }
                 db.Contacts.Add(contactModel);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -66,14 +87,43 @@ namespace WebContacts.Controllers
             return View(contactModel);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,Position,Email,PhoneNumber")] ContactModel contactModel)
+        public ActionResult Edit(int? id, HttpPostedFileBase upload)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var contactModel = db.Contacts.Find(id);
+            //if (contactModel == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            if (TryUpdateModel(contactModel, "", new string[] { "FirstName", "LastName", "Position", "Email", "PhoneNumber" }))
+            {
+                if (upload != null && upload.ContentLength > 0)
+                {
+                    // check if user have Avatar uploaded
+                    if (contactModel.Files.Any(f => f.FileType == FileType.Avatar))
+                    {
+                        db.files.Remove(contactModel.Files.First(f => f.FileType == FileType.Avatar));
+                    }
+                    var avatar = new File
+                    {
+                        FileName = System.IO.Path.GetFileName(upload.FileName),
+                        FileType = FileType.Avatar,
+                        ContentType = upload.ContentType
+                    };
+                    using (var reader = new System.IO.BinaryReader(upload.InputStream))
+                    {
+                        avatar.Content = reader.ReadBytes(upload.ContentLength);
+                    }
+                    contactModel.Files = new List<File> { avatar };
+                }
                 db.Entry(contactModel).State = EntityState.Modified;
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             return View(contactModel);
