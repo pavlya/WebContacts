@@ -20,6 +20,7 @@ namespace WebContacts.Controllers
         {
             if (ModelState.IsValid)
             {
+                LogManager logManager = new LogManager(db);
                 UserManager userManger = new UserManager(db);
                 string password = userManger.GetUserPassword(model);
                 if (string.IsNullOrEmpty(password))
@@ -29,12 +30,16 @@ namespace WebContacts.Controllers
                 else if (model.Password.Equals(password))
                 {
                     FormsAuthentication.SetAuthCookie(model.Username, false);
+                    logManager.LogSuccessfulLogin(model.Username);
                     return RedirectToAction("Index", "Home");
-                } else
+                }
+                else
                 {
+                    logManager.LogUnSuccessfulLogin(model.Username);
                     ModelState.AddModelError("", "The password provided is incorrect.");
                 }
-                    
+
+                logManager.LogUnSuccessfulLogin(model.Username);
                 ModelState.AddModelError("", "Bad login attempt");
             }
 
@@ -49,18 +54,26 @@ namespace WebContacts.Controllers
         [HttpPost]
         public ActionResult Register(RegistrationModel model)
         {
+            LogManager logManager = new LogManager(db);
             if (ModelState.IsValid)
             {
+
                 UserManager userManger = new UserManager(db);
-                if (!userManger.IsLoginNameExist(model)){
-                    userManger.createNewUser(model);
-                    FormsAuthentication.SetAuthCookie(model.UserName, false);
-                    return RedirectToAction("Index", "Home");
-                } else
+                if (!userManger.IsLoginNameExist(model))
                 {
+                    userManger.createNewUser(model);
+                    //FormsAuthentication.SetAuthCookie(model.UserName, false);
+                    logManager.LogSuccessfulRegistration(model.UserName);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    logManager.LogUnSuccessfulRegistration(model.UserName);
                     ModelState.AddModelError("", "Username already exists");
                 }
+
             }
+            logManager.LogUnSuccessfulRegistration(model.UserName);
             return View();
         }
 
