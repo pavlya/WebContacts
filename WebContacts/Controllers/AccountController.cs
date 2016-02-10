@@ -64,6 +64,12 @@ namespace WebContacts.Controllers
                     userManger.createNewUser(model);
                     //FormsAuthentication.SetAuthCookie(model.UserName, false);
                     logManager.LogSuccessfulRegistration(model.UserName);
+                    InsertMessage message = new InsertMessage();
+
+                    // passing message to control about seccussfull registration
+                    message.MessageText = "Registered user: " + model.UserName + " successfully. Now you can Log In.";
+                    TempData["message"] = message;
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -91,5 +97,10 @@ namespace WebContacts.Controllers
             }
             base.Dispose(disposing);
         }
+    }
+
+    public class InsertMessage
+    {
+        public string MessageText { get; set; }
     }
 }

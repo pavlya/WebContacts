@@ -7,6 +7,11 @@ namespace WebContacts.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            InsertMessage message = TempData["message"] as InsertMessage;
+            if(message != null)
+            {
+                ViewData["MessageText"] = message.MessageText;
+            }
             return View();
         }
     }
