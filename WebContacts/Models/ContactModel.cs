@@ -18,7 +18,7 @@ namespace WebContacts.Models
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public string Position { get; set; }
+        public Position Position { get; set; }
 
         [Required(ErrorMessage = "*")]
         [RegularExpression(@"^[a-zA-Z0-9.-]{1,20}@[a-zA-Z0-9]{1,20}\.[A-Za-z]{2,4}", ErrorMessage = "Wrong email format")]
@@ -31,5 +31,14 @@ namespace WebContacts.Models
         
         public virtual ICollection<File> Files { get; set; }
 
+    }
+
+    public enum Position
+    {
+        Developer,
+        Designer,
+        Helpdesk,
+        IT_Specialist,
+        QA_Specialist
     }
 }
