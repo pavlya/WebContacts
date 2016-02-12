@@ -16,7 +16,8 @@ namespace WebContacts.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(LoginModel model)
+        // Using return Url, to take user back to page, where he wanted to go
+        public ActionResult Index(LoginModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -31,6 +32,13 @@ namespace WebContacts.Controllers
                 {
                     FormsAuthentication.SetAuthCookie(model.Username, false);
                     logManager.LogSuccessfulLogin(model.Username);
+
+                    // redirects the user to page, where he wanted to go
+                    if (!string.IsNullOrWhiteSpace(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
