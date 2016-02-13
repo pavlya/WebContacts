@@ -16,3 +16,13 @@ textarea {
     max-width: 280px;
 }
 
+/*Set the style of password checker and text color*/
+#passValidation {
+    margin: 30px 0 20px 0;
+}
+.default{color: #000000;}
+.weak{color: #FF5353;}
+.medium{color: #FAD054;}
+.strong{color: #93C9F4; }
+.strongest{color: #00ff21;}
+
