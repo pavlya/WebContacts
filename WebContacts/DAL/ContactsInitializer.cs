@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using WebContacts.Models;
 
 namespace WebContacts.DAL
@@ -9,9 +10,53 @@ namespace WebContacts.DAL
         Random rand = new Random();
         protected override void Seed(WebContactsContext context)
         {
+            GenerateContacts(context);
+            GenerateWorkersHours(context);
+            GenerateDefaultAdmin(context);
+        }
+
+        private void GenerateDefaultAdmin(WebContactsContext context)
+        {
+            
+            RegistrationModel defaultAdmin = new RegistrationModel
+            {
+                UserName = "admin",
+                Password = "password",
+                ConfirmPassword = "password",
+                Email = "admin@test.net",
+                ConfirmEmail = "admin@test.net"
+            };
+            context.Logins.Add(defaultAdmin);
+            context.SaveChanges();
+        }
+
+        //Add workers hours to database
+        private void GenerateWorkersHours(WebContactsContext context)
+        {
+            var monthHours = new List<MonthHours>();
+            List<ContactModel> contactsList = context.Contacts.ToList();
+            foreach (ContactModel contact in contactsList)
+            {
+                for (int i = 0; i < 12; i++)
+                {
+                    MonthHours model = new MonthHours
+                    {
+                        ContactModelId = contact.Id,
+                        Hours = rand.Next(180),
+                        MonthOfTheYear = (Month)i
+                    };
+                    monthHours.Add(model);
+                }
+            }
+
+            monthHours.ForEach(m => context.MonthHours.Add(m));
+            context.SaveChanges();
+        }
+
+        private void GenerateContacts(WebContactsContext context)
+        {
             // using random value to get random positions
             int enumLength = Position.GetNames(typeof(Position)).Length;
-            rand.Next();
             //Create dummy contacts
             var contacts = new List<ContactModel> {
                 new ContactModel { FirstName = "Robin", LastName ="Hood", Position=(Position)rand.Next(enumLength), // random value for getting position

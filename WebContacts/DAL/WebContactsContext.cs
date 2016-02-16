@@ -17,6 +17,7 @@ namespace WebContacts.DAL
         public DbSet<RegistrationModel> Logins { get; set; }
         public DbSet<LogModel> Logs { get; set; }
         public DbSet<File> files { get; set; }
+        public DbSet<MonthHours>  MonthHours { get; set; }
 
         //check why we need this
         //for naming of tables (Contact instead of Contacts)

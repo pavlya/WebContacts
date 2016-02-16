@@ -13,8 +13,15 @@ namespace WebContacts.Models
         public int Id { get; set; }
 
         public DateTime date { get; set; }
-        public string logEvent { get; set; }
+        public LogEventType logEvent { get; set; }
         public string Username { get; set; }
         public string description { get; set; }
+    }
+
+    public enum LogEventType
+    {
+        Registration,
+        LogIn,
+        FileUpload
     }
 }

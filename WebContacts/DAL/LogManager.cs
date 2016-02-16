@@ -27,28 +27,32 @@ namespace WebContacts.DAL
         public void LogSuccessfulRegistration(string username)
         {
             string message = "Registration succeed";
-            LogEvent(username, message);
+            LogEventType logEvent = LogEventType.Registration;
+            LogEvent(username, message, logEvent);
         }
 
         public void LogUnSuccessfulRegistration(string username)
         {
             string message = "Registration failed";
-            LogEvent(username, message);
+            LogEventType logEvent = LogEventType.Registration;
+            LogEvent(username, message, logEvent);
         }
 
         public void LogSuccessfulLogin(string username)
         {
             string message = "Login succeed";
-            LogEvent(username, message);
+            LogEventType logEvent = LogEventType.LogIn;
+            LogEvent(username, message, logEvent);
         }
 
         public void LogUnSuccessfulLogin(string username)
         {
             string message = "Login failed";
-            LogEvent(username, message);
+            LogEventType logEvent = LogEventType.LogIn;
+            LogEvent(username, message, logEvent);
         }
 
-        private void LogEvent(string username, string message)
+        private void LogEvent(string username, string message, LogEventType logEvent)
         {
             DateTime now = DateTime.Now;
             LogModel logModel = new LogModel();
@@ -57,7 +61,7 @@ namespace WebContacts.DAL
             logModel.date = now;
             logModel.description = combinedMessage;
             logModel.Username = username;
-            logModel.logEvent = message;
+            logModel.logEvent = logEvent;
 
             db.Logs.Add(logModel);
             db.SaveChanges();
@@ -72,7 +76,7 @@ namespace WebContacts.DAL
             logModel.date = now;
             logModel.description = combinedMessage;
             logModel.Username = "";
-            logModel.logEvent = "Picture uploaded";
+            logModel.logEvent = LogEventType.FileUpload;
 
             db.Logs.Add(logModel);
             db.SaveChanges();
