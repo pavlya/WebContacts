@@ -16,7 +16,8 @@
                 Avatar
             </dt>
             <dd>
-                <img src="~/File?id=@Model.Files.First(f => f.FileType == FileType.Avatar).FileId" alt="avatar" width="125" height="125" />
+                <img id="userPic" src="~/File?id=@Model.Files.First(f => f.FileType == FileType.Avatar).FileId" alt="avatar" class="smallSize"/>
+                <div id="fullsize"></div>
             </dd>
         }
         <dt>
@@ -65,3 +66,35 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<script>
+    //var userPicture = $("#userPic");
+    //currentClass = userPicture.attr('class');
+    //userPicture.click(function(){
+    //    alert("Clicked!");
+    //});
+    //userPicture.click(function () {
+    //        currentClass = userPicture.attr('class');
+    //        userPicture.removeClass(currentClass);
+    //        alert("Clicked");
+    //    });
+    var $tooltip = $('#fullsize');
+
+    $('.img').on('mouseenter', function () {
+        var img = this,
+            $img = $(img),
+            offset = $img.offset();
+
+        $tooltip
+        .css({
+            'top': offset.top,
+            'left': offset.left
+        })
+        .append($img.clone())
+        .removeClass('hidden');
+    });
+
+    $tooltip.on('mouseleave', function () {
+        $tooltip.empty().addClass('hidden');
+    });
+</script>
+

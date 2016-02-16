@@ -26,3 +26,21 @@ textarea {
 .strong{color: #93C9F4; }
 .strongest{color: #00ff21;}
 
+.smallSize {
+    width: 125px; 
+    height: 125px;
+}
+
+#fullsize.hidden {
+    display: none;
+}
+
+body > img {
+    width: 125px;
+    height: 125px;
+    display: block;
+}
+#fullsize {
+    position: absolute;
+}
+
