@@ -41,6 +41,7 @@ namespace WebContacts.DAL
                 {
                     MonthHours model = new MonthHours
                     {
+                        // get Id of corresponding contact and associate it with month hours
                         ContactModelId = contact.Id,
                         Hours = rand.Next(180),
                         MonthOfTheYear = (Month)i

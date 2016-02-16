@@ -7,25 +7,18 @@
 
 <body>
 
-    <h4>Display pie chart using Highcharts in Asp.net C#</h4>
-    <select id="ddlyear">
-        <option>2010</option>
-        <option>2011</option>
-        <option>2012</option>
-        <option>2013</option>
-        <option>2014</option>
-        <option>2015</option>
-    </select>
-    <button id="btnCreatePieChart">Show </button>
+    <h4>Display Contact working hours per month</h4>
+    <input type="text" id="userName" />
+    <button id="btnCreatePieChart">Find by username </button>
     <br />
     <div>
-        <div id="container" style="width: 500px; height: 500px"></div>
+        <div id="container" style="width: 600px; height: 600px"></div>
+        <div id="textContainer"></div>
     </div>
 
 </body>
 <script>
-function drawPieChart(seriesData) {
-
+    function drawPieChart(hoursData, firstName) {
     $('#container').highcharts({
         chart: {
             plotBackgroundColor: null,
@@ -34,7 +27,7 @@ function drawPieChart(seriesData) {
             type: 'pie'
         },
         title: {
-            text: 'Logs by Type'
+            text: 'Hours By month of ' + firstName
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -45,7 +38,9 @@ function drawPieChart(seriesData) {
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    // point.name value is the item.name, that was configured for arr
+                    // y is the item.value 
+                    format: '<b>{point.name}</b>: {y} Hours, ({point.percentage:.1f} %)',
                     style: {
                         color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                     }
@@ -53,73 +48,59 @@ function drawPieChart(seriesData) {
             }
         },
         series: [{
-            name: "Brands",
+            name: "Hours",
             colorByPoint: true,
-            data: seriesData
+            data: hoursData
         }]
     });
 }
 
 $("#btnCreatePieChart").on('click', function (e) {
-    var pData = [];
-    pData[0] = $("#ddlyear").val();
-
-    var jsonData = JSON.stringify({ pData: pData });
-
-
-//    $.ajax({
-        //type: "POST",
-        //url: "WebService.asmx/getCityPopulation",
-        //data: jsonData,
-        //contentType: "application/json; charset=utf-8",
-        //dataType: "json",
-        //success: OnSuccess_,
-        //error: OnErrorCall_
-    //});
-
+    var userN = $('#userName').val();
 	$.ajax({
-        type: "GET",
-        url: "http://localhost:55362/api/test",
-        data: jsonData,
-        contentType: "application/json; charset=utf-8",
+	    type: "GET",
+        // put id of the user
+        url: "http://localhost:55362/api/test?user="+ userN,
+        // put 1 as id, for testing purpose
+        // data: "1",
+        contentType: "application/json",
         dataType: "json",
         success: OnSuccess_,
         error: OnErrorCall_
     });
 
-    function OnSuccess_(response) {
-        var aData = response.d;
-        var arr = []
+    // get response from asp.net site
+	function OnSuccess_(response) {
+        // map values of json to array for pie chart
+	    var arr = []
+	    $.map(response, function (item, index) {
+	            var i = [item.MonthOfTheYear, item.Hours];
+	            var obj = {};
+	        // get the value of the month
+	            obj.name = months[item.MonthOfTheYear];
 
+	        // get the value of the hours
+            // y variable is mandataory in highchart module
+	            obj.y = item.Hours;
+	            arr.push(obj);
+	    });
+        //$('#textContainer').text(arr);
+	    var myJsonString = JSON.stringify(arr);
+	    var jsonArray = JSON.parse(JSON.stringify(arr));
+	    drawPieChart(arr, userN);
 
-        //$.map(aData, function (item, index) {
-        //    var i = [item.city_name, item.population];
-        //    var obj = {};
-        //    obj.name = item.city_name;
-        //    obj.y = item.population;
-        //    arr.push(obj);
-        //});
-        //var myJsonString = JSON.stringify(arr);
-        //var jsonArray = JSON.parse(JSON.stringify(arr));
-
-        //drawPieChart(jsonArray);
-        $.map(aData, function (item, index) {
-            var i = [item.Username, item.description];
-            var obj = {};
-            obj.name = item.city_name;
-            obj.y = item.population;
-            arr.push(obj);
-        });
-        var myJsonString = JSON.stringify(arr);
-        var jsonArray = JSON.parse(JSON.stringify(arr));
-
-        drawPieChart(jsonArray);
 
     }
     function OnErrorCall_(response) {
-        alert("Whoops something went wrong!");
+        alert("No Such user.");
     }
+
+    var months = ["January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December", "December"];
+
     e.preventDefault();
 });
+
 </script>
 </html>

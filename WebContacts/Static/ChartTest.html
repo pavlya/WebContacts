@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery-1.12.0.js"></script>
+    <script src="Highcharts/highcharts.js"></script>
+</head>
+
+<body>
+    <div id="container" style="height: 300px">
+        <p>Some Text</p>
+        <input type="button" id="btnGetChart" value="Push Me"/>
+    </div>
+    <script>
+
+        $("#btnGetChart").on('click', function () {
+            $('#container').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Users Working Hours'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: [{
+                        name: '1',
+                        y: 56.33
+                    }, {
+                        name: '2',
+                        y: 95
+                    }, {
+                        name: '3',
+                        y: 40
+                    }]
+                }]
+            });
+        });
+    </script>
+</body>
+</html>

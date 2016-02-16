@@ -174,6 +174,7 @@
     <Content Include="scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
     <Content Include="Static\jquery-1.12.0.js" />
+    <Content Include="Static\ChartTest.html" />
     <Content Include="Views\Home\TableTest.html" />
     <Content Include="Static\JSTest.html" />
     <Content Include="Web.config" />
@@ -194,7 +195,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LogsController.cs" />
-    <Compile Include="DAL\TestController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Models\UserNamePasswordModel.cs" />
     <Compile Include="DAL\ContactsInitializer.cs" />
     <Compile Include="DAL\LogManager.cs" />

@@ -13,7 +13,6 @@ namespace WebContacts.Models
 
         public int Id { get; set; }
 
-        [ForeignKey("ContactModel")]
         public int ContactModelId { get; set; }
 
         [Range(0, MaxMonthHours)]
